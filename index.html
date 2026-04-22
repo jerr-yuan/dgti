@@ -334,17 +334,18 @@ body{min-height:100vh;min-height:100dvh}
 }
 .dim-value{font-weight:600;color:var(--text)}
 
-/* axes grid */
-.axes-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.axis-item{
-  padding:16px 0;
-  border-bottom:1px solid var(--line);
-}
-.axis-item:nth-child(odd){padding-right:20px;border-right:1px solid var(--line)}
-.axis-item:nth-child(even){padding-left:20px}
-.axis-item:nth-last-child(-n+2){border-bottom:none}
-.axis-label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px}
-.axis-value{font-size:15px;font-weight:700}
+/* chemistry (相性) */
+.chem-grid{display:flex;flex-direction:column;gap:0}
+.chem-item{padding:14px 0;border-bottom:1px solid var(--line)}
+.chem-item:last-child{border-bottom:none}
+.chem-tag{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.chem-name{font-size:16px;font-weight:800;margin-bottom:4px}
+.chem-good .chem-name{color:var(--accent)}
+.chem-bad .chem-name{color:#b85c3a}
+.chem-reason{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* owner */
+.owner-text{font-size:15px;line-height:1.8;color:var(--text)}
 
 /* share card */
 .share-card{
@@ -496,8 +497,13 @@ body{min-height:100vh;min-height:100dvh}
   </div>
 
   <div class="result-section">
-    <div class="result-section-title">DIMENSIONS</div>
-    <div class="axes-grid" id="r-axes"></div>
+    <div class="result-section-title">相性 · CHEMISTRY</div>
+    <div class="chem-grid" id="r-chem"></div>
+  </div>
+
+  <div class="result-section">
+    <div class="result-section-title">你的主人类型</div>
+    <div class="owner-text" id="r-owner"></div>
   </div>
 
   <div class="result-section">
@@ -690,6 +696,24 @@ var T={
   IDSP:{c:"烂尾人",axis:"FLOP",b:"法国斗牛",n:"每件事都烂尾的那种",e:"🫠",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/2008-07-28_Dog_at_Frolick_Field.jpg/250px-2008-07-28_Dog_at_Frolick_Field.jpg",color:"#7D6B52",txt:"#ffffff",intro:"你的人生是一座巨大的烂尾楼群。",d:"FLOP 人格的「开始做一件事」能力是所有 DGTI 类型中最强的——没有人比你更会开始。减肥？第一天就买了瑜伽垫、运动鞋和三罐蛋白粉。学英语？Day 1 就下了五个 App、关注了八个博主、制定了一份精确到分钟的学习计划表。但问题是：你的「坚持做一件事」能力也是所有类型中最弱的。瑜伽垫现在用来垫桌脚，运动鞋还没拆标签，学习计划表停在了「Day 1: 完成」。你不是三分钟热度。你是对「开始做一件事」这个行为本身上瘾了——那种万事开头的兴奋感、那种「这次一定能坚持」的自信、那种买了装备就觉得自己已经完成了 80% 的错觉。至于剩下的 80%？总有一天会做的。大概。",q:"「这次我是认真的。（上次也是这么说的。上上次也是。）」",tr:"开始做事全宇宙最强 . 坚持做事倒数第一 . 瑜伽垫用来垫桌脚 . 买装备 = 完成 80%",aka:"人生烂尾楼 CEO / 开始做事全宇宙最强",cl:"拖把：（一拖再拖） | 科学家：等我再研究研究 | 瑜伽垫垫桌脚专家 | 健身卡一年去两次 | 学习计划 Day 1 终生会员"},
   IDSW:{c:"圆场人",axis:"SPIN",b:"中华田园犬",n:"把烂事说成好事的那种",e:"🌾",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Dog_00154.JPG/250px-Dog_00154.JPG",color:"#C4A862",txt:"#1e2a22",intro:"你是自己的最佳辩护律师，而且从未输过。",d:"SPIN 人格拥有一项超能力：把任何负面事件重新编译成正面叙事。没升职？「升职就要加班，不如不升。」被甩了？「其实 ta 配不上我，是 ta 的损失。」钱包空了？「物欲少就是自由。」考试挂了？「说明这个学科不适合我，我的才华在别处。」你不是阿Q。你是阿Q的 Pro Max Ultra 版。你已经把精神胜利法升级成了一套完整的操作系统——遇到任何打击，系统自动运行「此事利好我」的归因算法，0.5 秒内输出一个让自己心安理得的结论。旁人看你觉得你很豁达，其实你不是豁达，你是太累了。真正面对失败需要勇气，而你现在的勇气只够用来说服自己一切都还好。一切都还好。一切——真的——还好。",q:"「这样也挺好的。真的挺好的。（在心里说了一万遍。）」",tr:"精神胜利 Pro Max Ultra . 归因算法 0.5 秒输出 . 自我辩护从未输过 . 一切都还好的无限循环",aka:"精神胜利 Pro Max / 自我辩护律师（终身免费）",cl:"这样也挺好的自动生成器 | 失业 = 自由（自我包装） | 被甩 = 其实 ta 配不上我 | 钱包空了 = 物欲少就是自由 | 升职要加班 = 不如不升"}
 };
+var MD={
+  ETLP:{g:"ITSW",gn:"老灵魂",gr:"你给的时候他接住；他稳的时候你刚好需要一个稳的人",b:"EDSP",bn:"玻璃皇",br:"你发「在吗」，对方开始分析你这个「在吗」是什么意思",ow:"不怎么主动、但偶尔一句话就能把你心跳搞乱的那种人。不健康，但你就是走不掉。"},
+  ETLW:{g:"IDSW",gn:"圆场人",gr:"两个人都「好说话」，一个「没事没事」一个「这样也挺好」，意外和谐",b:"IDLP",bn:"炸毛人",br:"你答应得越爽快，对方炸得越凶——「你根本没认真听我说」",ow:"总有事要麻烦你、但偶尔会认真说一句「还好有你」的那种人"},
+  ETSP:{g:"IDLW",gn:"装睡者",gr:"你疯完了，对方继续睡，互不干扰，完美",b:"ITSW",bn:"老灵魂",br:"你输出宇宙，对方叹气：「年轻人，慢慢来。」你沉默了三秒。",ow:"不试图教育你、接住你每一个神经病瞬间的那种人"},
+  ETSW:{g:"ITLW",gn:"寄生人",gr:"你不停跑，对方一直跟在脚边，跑完了还在",b:"IDSP",bn:"烂尾人",br:"你做完 A，对方负责把 A 开了头再变成烂尾",ow:"布置任务比发工资快、但确实知道你能力在哪里的那种人"},
+  EDLP:{g:"ITLW",gn:"寄生人",gr:"你笑，对方腻着，两个人都不用解释",b:"EDSP",bn:"玻璃皇",br:"你假笑，对方开始分析你的笑是不是在针对他",ow:"从不问「你真的没事吗」、但总在你快撑不住的时候出现的那种人"},
+  EDLW:{g:"ITSW",gn:"老灵魂",gr:"他看穿你笑容背后的东西，但不戳破，只是多加了块饭",b:"ETSP",bn:"疯批",br:"你维持稳定，对方隔三差五在旁边炸场，你的笑越来越难维持",ow:"喜欢你笑、但偶尔会认真问你「今天累不累」的那种人"},
+  EDSP:{g:"ETLW",gn:"工具人",gr:"工具人永远说「好好好」，你的 47 页分析报告永远有人接",b:"ETLP",bn:"舔者",br:"两个人都等对方先哄，谁先憋不住谁输，可以耗到宇宙热寂",ow:"随口说一句话、不知道你能分析三天的那种人。你也不怪他，他不知道。"},
+  EDSW:{g:"ITSW",gn:"老灵魂",gr:"两个人坐着不说话，各自刷手机，偶尔对视一眼，这就够了",b:"ETLP",bn:"舔者",br:"你想要安静，对方已经趴你腿上开始舔脸了",ow:"不需要你随时回消息、能接受「嗯」作为完整答复的那种人"},
+  ITLP:{g:"ETLW",gn:"工具人",gr:"你心动得快，工具人说「好」；你要的多，工具人都接",b:"EDSW",bn:"闷蛋",br:"你热情输出，对方嗯了一声，你 4.7 秒的多巴胺直接熄火",ow:"今天撩你明天消失、把你心跳节奏彻底调乱的那种人。你知道不好，但就是戒不掉。"},
+  ITLW:{g:"ETSW",gn:"燃尽者",gr:"燃尽者不停跑，你一直跟着，他不会甩开你",b:"ITSW",bn:"老灵魂",br:"老灵魂需要独处，你需要有人在，两边都在憋着",ow:"走到哪都不介意你跟着、把你的「黏」当成一种陪伴的那种人"},
+  ITSP:{g:"ETLP",gn:"舔者",gr:"舔者天生会读反话，你说「没事」他会问「真的没事？」",b:"EDSW",bn:"闷蛋",br:"两个人都等对方先开口，可以等到宇宙热寂",ow:"听到「随便」会直接说「走，吃日料」的那种人"},
+  ITSW:{g:"EDSW",gn:"闷蛋",gr:"两个人都安静，互相的存在刚好够用",b:"ETSP",bn:"疯批",br:"你叹气「年轻人慢慢来」，对方已经在追自己的尾巴了",ow:"年纪比你小但你愿意认真听他说话的那种人，因为他好像真的在想"},
+  IDLP:{g:"EDLW",gn:"笑死者",gr:"你炸了，对方笑着说「好了好了」，你莫名就消气了",b:"ETLW",bn:"工具人",br:"你越炸，工具人越「好好好」，你越觉得没被当回事，越炸",ow:"炸完了不跑、等你自己冷静下来再说话的那种人"},
+  IDLW:{g:"ITSW",gn:"老灵魂",gr:"老灵魂理解战略撤退，两个人都不逼对方",b:"ETSW",bn:"燃尽者",br:"你躺着，对方拉你起来干活，你躺回去，对方再拉，无限循环",ow:"不催你起床、不觉得「再睡一会儿」是在浪费时间的那种人"},
+  IDSP:{g:"ETLW",gn:"工具人",gr:"你开了头烂尾了，工具人说「行，我来」，闭环了",b:"ETSW",bn:"燃尽者",br:"燃尽者以为你会做完，你以为他会帮你收尾，两边都等对方",ow:"帮你把第二件事也做完、不骂你只顾开头的那种人"},
+  IDSW:{g:"IDLP",gn:"炸毛人",gr:"炸毛人炸了，你说「这样也挺好」，对方莫名就平复了",b:"EDSP",bn:"玻璃皇",br:"你说「这样也挺好」，对方翻出三年前的旧账说「那次不好」",ow:"相信你说的「这样也挺好」是真心话、不逼你承认其实不好的那种人"}
+};
 var cur=0,sc={};
 var LETTERS=["A","B","C"];
 function reset(){sc={E:0,I:0,T:0,D:0,L:0,S:0,P:0,W:0}}
@@ -811,15 +835,23 @@ function result(){
     traitsEl.appendChild(d);
   });
 
-  var ax=[
-    {l:"社交",v:sc.E>=sc.I?"E 外向":"I 内向"},
-    {l:"表达",v:sc.T>=sc.D?"T 话痨":"D 闷墩"},
-    {l:"黏度",v:sc.L>=sc.S?"L 黏人":"S 高冷"},
-    {l:"风格",v:sc.P>=sc.W?"P 顽皮":"W 乖巧"}
-  ];
-  document.getElementById("r-axes").innerHTML=ax.map(function(a){
-    return '<div class="axis-item"><div class="axis-label">'+a.l+'</div><div class="axis-value">'+a.v+'</div></div>';
-  }).join("");
+  var m=MD[code]||{};
+  var chemEl=document.getElementById("r-chem");
+  if(chemEl&&m.g){
+    chemEl.innerHTML=
+      '<div class="chem-item chem-good">'+
+        '<div class="chem-tag">🐾 最懂你</div>'+
+        '<div class="chem-name">'+m.gn+'</div>'+
+        '<div class="chem-reason">'+m.gr+'</div>'+
+      '</div>'+
+      '<div class="chem-item chem-bad">'+
+        '<div class="chem-tag">💥 最互相折磨</div>'+
+        '<div class="chem-name">'+m.bn+'</div>'+
+        '<div class="chem-reason">'+m.br+'</div>'+
+      '</div>';
+  }
+  var ownerEl=document.getElementById("r-owner");
+  if(ownerEl&&m.ow){ownerEl.textContent=m.ow;}
 
   show("result");
 }
