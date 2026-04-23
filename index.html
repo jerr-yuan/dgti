@@ -98,6 +98,9 @@ body{min-height:100vh;min-height:100dvh}
   margin-top:10px;font-weight:600;
 }
 .q-area{animation:su .3s ease}
+.q-back{display:none;font-size:13px;color:var(--muted);margin-bottom:8px;cursor:pointer;user-select:none;padding:4px 0;width:fit-content}
+.q-back:hover{color:var(--accent)}
+.q-back:active{opacity:0.6}
 .q-number{
   font-size:12px;font-weight:700;
   letter-spacing:0.05em;
@@ -443,6 +446,7 @@ body{min-height:100vh;min-height:100dvh}
     <span class="progress-label" id="q-counter">1 / 30</span>
   </div>
   <div class="q-area" id="qc">
+    <div class="q-back" id="qb" onclick="back()">← 上一题</div>
     <div class="q-number" id="qn">QUESTION 01</div>
     <div class="q-text" id="qt"></div>
     <div class="options" id="opts"></div>
@@ -714,7 +718,7 @@ var MD={
   IDSP:{g:"ETLW",gn:"工具人",gr:"你开了头烂尾了，工具人说「行，我来」，闭环了",b:"ETSW",bn:"燃尽者",br:"燃尽者以为你会做完，你以为他会帮你收尾，两边都等对方",ow:"帮你把第二件事也做完、不骂你只顾开头的那种人"},
   IDSW:{g:"IDLP",gn:"炸毛人",gr:"炸毛人炸了，你说「这样也挺好」，对方莫名就平复了",b:"EDSP",bn:"玻璃皇",br:"你说「这样也挺好」，对方翻出三年前的旧账说「那次不好」",ow:"相信你说的「这样也挺好」是真心话、不逼你承认其实不好的那种人"}
 };
-var cur=0,sc={};
+var cur=0,sc={},hist=[];
 var LETTERS=["A","B","C"];
 function reset(){sc={E:0,I:0,T:0,D:0,L:0,S:0,P:0,W:0}}
 function show(id){document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("active")});document.getElementById(id).classList.add("active");window.scrollTo(0,0)}
@@ -739,12 +743,14 @@ function pickQuestions(){
   }
   return [locked[0]].concat(combined);
 }
-function start(){cur=0;reset();pickedQ=pickQuestions();show("quiz");render()}
+function start(){cur=0;hist=[];reset();pickedQ=pickQuestions();show("quiz");render()}
+function back(){if(cur<=0||!hist.length)return;var last=hist.pop();Object.keys(last).forEach(function(k){sc[k]=(sc[k]||0)-last[k]});cur--;render()}
 
 function render(){
   var q=pickedQ[cur],p=Math.round(((cur)/pickedQ.length)*100);
   document.getElementById("q-counter").textContent=(cur+1)+" / "+pickedQ.length;
   document.getElementById("pf").style.width=p+"%";
+  document.getElementById("qb").style.display=cur>0?"block":"none";
   document.getElementById("qn").textContent="QUESTION "+String(cur+1).padStart(2,"0");
   document.getElementById("qt").textContent=q.t;
   var c=document.getElementById("opts");c.innerHTML="";
@@ -768,6 +774,7 @@ function render(){
 function pick(os,btn){
   document.querySelectorAll(".option").forEach(function(o){o.classList.remove("selected")});
   btn.classList.add("selected");
+  hist.push(os);
   Object.keys(os).forEach(function(k){sc[k]=(sc[k]||0)+os[k]});
   setTimeout(function(){cur++;if(cur>=pickedQ.length){document.getElementById("pf").style.width="100%";loading()}else render()},300);
 }
@@ -870,7 +877,7 @@ function share(){
 }
 function fallback(txt){var ta=document.createElement("textarea");ta.value=txt;ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast()}catch(e){}document.body.removeChild(ta)}
 function toast(){var el=document.getElementById("toast");el.classList.add("show");setTimeout(function(){el.classList.remove("show")},2200)}
-function retry(){cur=0;reset();pickedQ=pickQuestions();show("quiz");render()}
+function retry(){cur=0;hist=[];reset();pickedQ=pickQuestions();show("quiz");render()}
 </script>
 </body>
 </html>
